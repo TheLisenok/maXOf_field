@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: New Table Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: New Table
+  m_TableCollectionNameGuidString: eef449eee6155cc42989fcdbf2e30a30
+  m_Entries:
+  - m_Id: 24661803008
+    m_Key: Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 127355142144
+    m_Key: ControlDescription
+    m_Metadata:
+      m_Items: []
+  - m_Id: 371732070400
+    m_Key: PlayButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 431983247360
+    m_Key: ExitButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460751978496
+    m_Key: ResumeButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 629572714496
+    m_Key: RestartButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 673868759040
+    m_Key: MainMenuButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 723252494336
+    m_Key: GameModeHumanButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 816101801984
+    m_Key: GameModeComputerButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 874331324416
+    m_Key: InDevelopText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 948130103296
+    m_Key: NobodyWin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1012382646272
+    m_Key: ZeroWin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1045953855488
+    m_Key: CrossWin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2868957757440
+    m_Key: GameMode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19989614142017536
+    m_Key: BackButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087447944974336
+    m_Key: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087547597443072
+    m_Key: Minimize
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087793849225216
+    m_Key: Won Crosses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087800593666048
+    m_Key: Won Noughts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27089227093233664
+    m_Key: Show victory window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27939590096670720
+    m_Key: The AI makes the first move
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 1709404797883121688
+  references:
+    version: 2
+    RefIds:
+    - rid: 1709404797883121688
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1706526215512

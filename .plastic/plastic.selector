@@ -1,0 +1,4 @@
+repository "Tic_tac_toe@TheLisenok@cloud"
+  path "/"
+    br "/main"
+    co "/main"
