@@ -114,11 +114,11 @@ public class ButtonManager : MonoBehaviour
     #region IEnumerator
     IEnumerator LoadLevel(int levelIndex)
     {
-        playTransition.SetTrigger("Start"); // Запускаем анимацию через триггер
+        playTransition.SetTrigger("Start"); // Р—Р°РїСѓСЃРєР°РµРј Р°РЅРёРјР°С†РёСЋ С‡РµСЂРµР· С‚СЂРёРіРіРµСЂ
 
-        yield return new WaitForSeconds(waitTime); // Ждём когда анимация закончится
+        yield return new WaitForSeconds(waitTime); // Р–РґС‘Рј РєРѕРіРґР° Р°РЅРёРјР°С†РёСЏ Р·Р°РєРѕРЅС‡РёС‚СЃСЏ
 
-        SceneManager.LoadScene(levelIndex); // Загружаем уровень
+        SceneManager.LoadScene(levelIndex); // Р—Р°РіСЂСѓР¶Р°РµРј СѓСЂРѕРІРµРЅСЊ
     }
     IEnumerator ExitWithAnimation()
     {

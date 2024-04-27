@@ -9,19 +9,19 @@ public class CheckpointManager : MonoBehaviour
     [SerializeField] private List<List<Vector2>> checkpointPosList = new List<List<Vector2>>();
 
     [SerializeField] private GameObject[] checkpointObject;
-    [SerializeField] private GameObject targerForCamera;
+    [SerializeField] private GameObject targetForCamera;
     [SerializeField] private GameObject[] buttons;
 
     private int cellMultiplicity;
     //private int moveInt;
-    private List<int> countCheck = new List<int>{0, 0}; // Позиция последнег чекпоинта, которые переключал игрок (для каждого игрока свой)
+    private List<int> countCheck = new List<int>{0, 0}; // РџРѕР·РёС†РёСЏ РїРѕСЃР»РµРґРЅРµРіРѕ С‡РµРєРїРѕРёРЅС‚Р°, РєРѕС‚РѕСЂС‹Рµ РїРµСЂРµРєР»СЋС‡Р°Р» РёРіСЂРѕРє (РґР»СЏ РєР°Р¶РґРѕРіРѕ РёРіСЂРѕРєР° СЃРІРѕР№)
     private TurnScript turnScript;
 
     public void GoForward()
     {
         int moveInt = turnScript.moveInt;
 
-        if (checkpointsGameObject[moveInt % 2].Count > 0) // Если чекпоинты хотя бы уже ставили
+        if (checkpointsGameObject[moveInt % 2].Count > 0) // Р•СЃР»Рё С‡РµРєРїРѕРёРЅС‚С‹ С…РѕС‚СЏ Р±С‹ СѓР¶Рµ СЃС‚Р°РІРёР»Рё
         {
             if (countCheck[moveInt % 2] + 1 > checkpointsGameObject[moveInt % 2].Count - 1)
             {
@@ -34,7 +34,7 @@ public class CheckpointManager : MonoBehaviour
 
             try
             {
-                targerForCamera.transform.position = checkpointsGameObject[moveInt % 2][countCheck[moveInt % 2]].transform.position;
+                targetForCamera.transform.position = checkpointsGameObject[moveInt % 2][countCheck[moveInt % 2]].transform.position;
             }
             catch
             {
@@ -59,11 +59,11 @@ public class CheckpointManager : MonoBehaviour
                 countCheck[moveInt % 2]--;
             }
 
-            targerForCamera.transform.position = checkpointsGameObject[moveInt % 2][countCheck[moveInt % 2]].transform.position;
+            targetForCamera.transform.position = checkpointsGameObject[moveInt % 2][countCheck[moveInt % 2]].transform.position;
         }
     }
     
-    public void CheckActiveButton(int moveInt) // Активируется в TurnScript (да костыль, да я знаю, что в больших проектах так делать нельзя, но иначе мне нужно будет каждый кадр проверять, а есть ли чекпоинты или нет)
+    public void CheckActiveButton(int moveInt) // РђРєС‚РёРІРёСЂСѓРµС‚СЃСЏ РІ TurnScript (РґР° РєРѕСЃС‚С‹Р»СЊ, РґР° СЏ Р·РЅР°СЋ, С‡С‚Рѕ РІ Р±РѕР»СЊС€РёС… РїСЂРѕРµРєС‚Р°С… С‚Р°Рє РґРµР»Р°С‚СЊ РЅРµР»СЊР·СЏ, РЅРѕ РёРЅР°С‡Рµ РјРЅРµ РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ РєР°Р¶РґС‹Р№ РєР°РґСЂ РїСЂРѕРІРµСЂСЏС‚СЊ, Р° РµСЃС‚СЊ Р»Рё С‡РµРєРїРѕРёРЅС‚С‹ РёР»Рё РЅРµС‚)
     {
         if (checkpointPosList[moveInt % 2].Count == 0) 
         {
@@ -74,16 +74,12 @@ public class CheckpointManager : MonoBehaviour
         }
     }
     
-    private bool CheckSameCheckpoints(List<Vector2> _checkpointPosList, Vector2 nowCheckpoint)
-    {
-        return nowCheckpoint == _checkpointPosList.Find(x => x == nowCheckpoint);
-    }
 
     private void Awake()
     {
         turnScript = gameObject.GetComponent<TurnScript>();
 
-        //Создание двух списков в списке, ВОЗМОЖНО КОСТЫЛЬ
+        //РЎРѕР·РґР°РЅРёРµ РґРІСѓС… СЃРїРёСЃРєРѕРІ РІ СЃРїРёСЃРєРµ, Р’РћР—РњРћР–РќРћ РљРћРЎРўР«Р›Р¬
         checkpointsGameObject.Add(new List<GameObject>());
         checkpointsGameObject.Add(new List<GameObject>());
 
@@ -91,12 +87,12 @@ public class CheckpointManager : MonoBehaviour
         checkpointPosList.Add(new List<Vector2>());
 
 
-        if (targerForCamera == null)
+        if (targetForCamera == null)
         {
-            targerForCamera = GameObject.FindGameObjectWithTag("targetForCamera");
+            targetForCamera = GameObject.FindGameObjectWithTag("targetForCamera");
         }
 
-        for (int i = 0; i < buttons.Length; i++) // Ставим кнопки неактивными при старте, так как чекпоинтов нет
+        for (int i = 0; i < buttons.Length; i++) // РЎС‚Р°РІРёРј РєРЅРѕРїРєРё РЅРµР°РєС‚РёРІРЅС‹РјРё РїСЂРё СЃС‚Р°СЂС‚Рµ, С‚Р°Рє РєР°Рє С‡РµРєРїРѕРёРЅС‚РѕРІ РЅРµС‚
         {
             buttons[i].GetComponent<Button>().interactable = false;
         }
@@ -108,36 +104,28 @@ public class CheckpointManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(2)) // ср кнопка мыши
+        if(Input.GetMouseButtonDown(2)) // СЃСЂ РєРЅРѕРїРєР° РјС‹С€Рё
         {
             int moveInt = turnScript.moveInt;
 
-            // Округляем/Получаем интовую позицию мыши 
-            // Правила округления берем из TurnScript
+            // РћРєСЂСѓРіР»СЏРµРј/РџРѕР»СѓС‡Р°РµРј РёРЅС‚РѕРІСѓСЋ РїРѕР·РёС†РёСЋ РјС‹С€Рё 
+            // РџСЂР°РІРёР»Р° РѕРєСЂСѓРіР»РµРЅРёСЏ Р±РµСЂРµРј РёР· TurnScript
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             Vector2 checkpointPos = new Vector2(Mathf.Round(mousePos.x / cellMultiplicity) * cellMultiplicity, Mathf.Round(mousePos.y / cellMultiplicity) * cellMultiplicity);
 
 
 
-
-            //DEBUG
-            foreach (var i in checkpointPosList){
-                //Debug.Log(i);
-            }
-
-
-
-            // Если вектора нет в списке
-            if (!CheckSameCheckpoints(checkpointPosList[moveInt % 2], checkpointPos))
+            // Р•СЃР»Рё РІРµРєС‚РѕСЂР° РЅРµС‚ РІ СЃРїРёСЃРєРµ
+            if (!checkpointPosList[moveInt % 2].Contains(checkpointPos)) 
             {
-                // Заносим ее в список
+                // Р—Р°РЅРѕСЃРёРј РµРµ РІ СЃРїРёСЃРѕРє
                 checkpointPosList[moveInt % 2].Add(checkpointPos);
 
-                // Спавним префаб с визуальным отображением чекпоинта и тоже заносим в список
+                // РЎРїР°РІРЅРёРј РїСЂРµС„Р°Р± СЃ РІРёР·СѓР°Р»СЊРЅС‹Рј РѕС‚РѕР±СЂР°Р¶РµРЅРёРµРј С‡РµРєРїРѕРёРЅС‚Р° Рё С‚РѕР¶Рµ Р·Р°РЅРѕСЃРёРј РІ СЃРїРёСЃРѕРє
                 checkpointsGameObject[moveInt % 2].Add(Instantiate(checkpointObject[moveInt % 2], checkpointPos, Quaternion.identity));
 
-                countCheck[moveInt % 2] = checkpointPosList[moveInt % 2].Count - 1; // При постановке фигуры переходим в конец
+                countCheck[moveInt % 2] = checkpointPosList[moveInt % 2].Count - 1; // РџСЂРё РїРѕСЃС‚Р°РЅРѕРІРєРµ С„РёРіСѓСЂС‹ РїРµСЂРµС…РѕРґРёРј РІ РєРѕРЅРµС†
             }
             else
             {
@@ -145,16 +133,16 @@ public class CheckpointManager : MonoBehaviour
                 int index = checkpointPosList[moveInt % 2].FindIndex(a => a == checkpointPos);
 
                 Destroy(checkpointsGameObject[moveInt % 2][index]);
-                checkpointsGameObject[moveInt % 2].RemoveAt(index); // По индексу
+                checkpointsGameObject[moveInt % 2].RemoveAt(index); // РџРѕ РёРЅРґРµРєСЃСѓ
 
-                checkpointPosList[moveInt % 2].Remove(checkpointPos); // По эллементу
+                checkpointPosList[moveInt % 2].Remove(checkpointPos); // РџРѕ СЌР»Р»РµРјРµРЅС‚Сѓ
 
-                countCheck[moveInt % 2] = checkpointPosList[moveInt % 2].Count - 1; // При удалении чекпоинта тоже переходим в конец
+                countCheck[moveInt % 2] = checkpointPosList[moveInt % 2].Count - 1; // РџСЂРё СѓРґР°Р»РµРЅРёРё С‡РµРєРїРѕРёРЅС‚Р° С‚РѕР¶Рµ РїРµСЂРµС…РѕРґРёРј РІ РєРѕРЅРµС†
             }
 
-            if (checkpointPosList[moveInt % 2].Count > 0) // Если есть хоть какие-то чекпоинты
+            if (checkpointPosList[moveInt % 2].Count > 0) // Р•СЃР»Рё РµСЃС‚СЊ С…РѕС‚СЊ РєР°РєРёРµ-С‚Рѕ С‡РµРєРїРѕРёРЅС‚С‹
             {
-                for (int i = 0; i < buttons.Length; i++) // Включаем кнопки
+                for (int i = 0; i < buttons.Length; i++) // Р’РєР»СЋС‡Р°РµРј РєРЅРѕРїРєРё
                 {
                     buttons[i].GetComponent<Button>().interactable = true;
                 }
@@ -169,12 +157,12 @@ public class CheckpointManager : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Z)) // Переход назад по чекпоинтам
+        if (Input.GetKeyDown(KeyCode.Z)) // РџРµСЂРµС…РѕРґ РЅР°Р·Р°Рґ РїРѕ С‡РµРєРїРѕРёРЅС‚Р°Рј
         {
             GoBack();
             
         }
-        if (Input.GetKeyDown(KeyCode.X))// Переход вперёд по чекпоинтам
+        if (Input.GetKeyDown(KeyCode.X))// РџРµСЂРµС…РѕРґ РІРїРµСЂС‘Рґ РїРѕ С‡РµРєРїРѕРёРЅС‚Р°Рј
         {
             GoForward();
         }

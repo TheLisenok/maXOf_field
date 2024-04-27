@@ -14725,7 +14725,7 @@ MonoBehaviour:
   checkpointObject:
   - {fileID: 6175669390861707188, guid: 25d9717c73cc7fa4281c61737be342dc, type: 3}
   - {fileID: 6175669390861707188, guid: d53234bbf03122e41aefcf3127b44c99, type: 3}
-  targerForCamera: {fileID: 2023058859}
+  targetForCamera: {fileID: 0}
   buttons:
   - {fileID: 1989206424}
   - {fileID: 524360979}
@@ -21017,7 +21017,7 @@ GameObject:
   - component: {fileID: 2023058860}
   m_Layer: 0
   m_Name: TargetForCamera
-  m_TagString: targerForCamera
+  m_TagString: targetForCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

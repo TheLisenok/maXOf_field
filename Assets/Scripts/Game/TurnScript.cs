@@ -17,26 +17,26 @@ public class TurnScript : MonoBehaviour
     public Animator winAnim;
 
     [Header("Data for AI")]
-    public List<Vector2> setCross = new List<Vector2>(); // Список с уже поставленными крестами
-    public List<Vector2> setZero = new List<Vector2>(); // Список с уже поставленными кругами
+    public List<Vector2> setCross = new List<Vector2>(); // РЎРїРёСЃРѕРє СЃ СѓР¶Рµ РїРѕСЃС‚Р°РІР»РµРЅРЅС‹РјРё РєСЂРµСЃС‚Р°РјРё
+    public List<Vector2> setZero = new List<Vector2>(); // РЎРїРёСЃРѕРє СЃ СѓР¶Рµ РїРѕСЃС‚Р°РІР»РµРЅРЅС‹РјРё РєСЂСѓРіР°РјРё
     [SerializeField] private AI aiScript;
     private bool isAImove;
 
     [Header("Figures")]
-    [SerializeField] private GameObject[] prefabs; // Префабы с фигурами
+    [SerializeField] private GameObject[] prefabs; // РџСЂРµС„Р°Р±С‹ СЃ С„РёРіСѓСЂР°РјРё
     [SerializeField] private Transform ObjectToSet;
     [SerializeField] private GameObject prefWinLine;
 
     [Header("Figure under cursor")]
-    [SerializeField][Range(0, 1)] private float alphaColorNow = 0.2f; // Альфа цвет фигуры под курсором
+    [SerializeField][Range(0, 1)] private float alphaColorNow = 0.2f; // РђР»СЊС„Р° С†РІРµС‚ С„РёРіСѓСЂС‹ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј
     [SerializeField][Range(0, 20f)] private float speed = 0.1f;
 
     [Header("Field settings")]
     [SerializeField] public int cellMultiplicity = 2;
-    // Объяснение, почему cellMultiplicity != 1: Юнити плохо работает как с числами с плавающей точкой, так и с большими. Поэтому размер 2 - это компромис, между плавностью работы камеры, движения фигуры и "бесконечностью поля"
+    // РћР±СЉСЏСЃРЅРµРЅРёРµ, РїРѕС‡РµРјСѓ cellMultiplicity != 1: Р®РЅРёС‚Рё РїР»РѕС…Рѕ СЂР°Р±РѕС‚Р°РµС‚ РєР°Рє СЃ С‡РёСЃР»Р°РјРё СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№, С‚Р°Рє Рё СЃ Р±РѕР»СЊС€РёРјРё. РџРѕСЌС‚РѕРјСѓ СЂР°Р·РјРµСЂ 2 - СЌС‚Рѕ РєРѕРјРїСЂРѕРјРёСЃ, РјРµР¶РґСѓ РїР»Р°РІРЅРѕСЃС‚СЊСЋ СЂР°Р±РѕС‚С‹ РєР°РјРµСЂС‹, РґРІРёР¶РµРЅРёСЏ С„РёРіСѓСЂС‹ Рё "Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚СЊСЋ РїРѕР»СЏ"
 
     [Header("Game rules")]
-    public int moveInt = 0; // Номер хода
+    public int moveInt = 0; // РќРѕРјРµСЂ С…РѕРґР°
     [SerializeField] private int countToWin = 5;
     private bool isAIGame;
     private bool AIfirstMove;
@@ -57,12 +57,12 @@ public class TurnScript : MonoBehaviour
 
 
     private bool isPlayerTurn;
-    private bool isWin = false; // Проверка победы
-    private GameObject figureNow; // Фигура, которая сейчас отображается под курсором
+    private bool isWin = false; // РџСЂРѕРІРµСЂРєР° РїРѕР±РµРґС‹
+    private GameObject figureNow; // Р¤РёРіСѓСЂР°, РєРѕС‚РѕСЂР°СЏ СЃРµР№С‡Р°СЃ РѕС‚РѕР±СЂР°Р¶Р°РµС‚СЃСЏ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј
     private Vector2 startPosWL;
     private Vector2 endPosWL;
 
-    private List<Vector2> offsets = new List<Vector2> // Список оффсетов для проверки победы (по часовой стрелке)
+    private List<Vector2> offsets = new List<Vector2> // РЎРїРёСЃРѕРє РѕС„С„СЃРµС‚РѕРІ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїРѕР±РµРґС‹ (РїРѕ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРµ)
     {
         new Vector2(-1, 1),
         new Vector2(0, 1),
@@ -78,36 +78,12 @@ public class TurnScript : MonoBehaviour
     #region Voids
     public bool CheckSame(List<Vector2> vectors, Vector2 nowVector)
     {
-        //Debug.Log(nowVector + ": " + (nowVector == vectors.Find(x => x == nowVector)));
-        
-        if (nowVector == Vector2.zero)
-        {
-            // Старая реазизация
-            if (nowVector == Vector2.zero)
-            {
-                for (int i = 0; i < vectors.Count; i++)
-                {
-                    if (vectors[i] == nowVector)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-        
-
-        // НЕ РАБОТАЕТ НА НУЛЕВОЙ КООРДИНАТЕ
-        return nowVector == vectors.Find(x => x == nowVector);
-        
-        
-        
+        return vectors.Contains(nowVector);
     }
 
     public bool CheckWin(List<Vector2> setFigures, Vector2 figurePos)
     {
-        // Перебираем все оффсеты
+        // РџРµСЂРµР±РёСЂР°РµРј РІСЃРµ РѕС„С„СЃРµС‚С‹
         for (int i = 0; i < offsets.Count; i++)
         {
             var tmpPos = figurePos;
@@ -115,7 +91,7 @@ public class TurnScript : MonoBehaviour
             int count = 1;
 
 
-            // Переходим к крайней фигуре
+            // РџРµСЂРµС…РѕРґРёРј Рє РєСЂР°Р№РЅРµР№ С„РёРіСѓСЂРµ
             while (CheckSame(setFigures, tmpPos + offset))
             {
                 tmpPos += offset;
@@ -123,7 +99,7 @@ public class TurnScript : MonoBehaviour
 
             startPosWL = tmpPos;
 
-            // Считаем кол-во фигур в ряде начиная с крайнего
+            // РЎС‡РёС‚Р°РµРј РєРѕР»-РІРѕ С„РёРіСѓСЂ РІ СЂСЏРґРµ РЅР°С‡РёРЅР°СЏ СЃ РєСЂР°Р№РЅРµРіРѕ
             while (CheckSame(setFigures, tmpPos - offset))
             {
                 count++;
@@ -178,15 +154,15 @@ public class TurnScript : MonoBehaviour
     {
         playerFigures.Add(figurePos);
 
-        // Создаем фигуру на том месте, возле которого был курсор
+        // РЎРѕР·РґР°РµРј С„РёРіСѓСЂСѓ РЅР° С‚РѕРј РјРµСЃС‚Рµ, РІРѕР·Р»Рµ РєРѕС‚РѕСЂРѕРіРѕ Р±С‹Р» РєСѓСЂСЃРѕСЂ
         GameObject fig = Instantiate(prefabs[moveInt % prefabs.Length], figurePos, Quaternion.Euler(0, 0, 0));
         fig.transform.SetParent(ObjectToSet, false);
 
-        // Проигрываем анимацию при постановке фигуры
-        GameObject partc = Instantiate(prefabPartc, figurePos, Quaternion.Euler(0, 0, 0)); // Спавним систему частиц
+        // РџСЂРѕРёРіСЂС‹РІР°РµРј Р°РЅРёРјР°С†РёСЋ РїСЂРё РїРѕСЃС‚Р°РЅРѕРІРєРµ С„РёРіСѓСЂС‹
+        GameObject partc = Instantiate(prefabPartc, figurePos, Quaternion.Euler(0, 0, 0)); // РЎРїР°РІРЅРёРј СЃРёСЃС‚РµРјСѓ С‡Р°СЃС‚РёС†
         partc.GetComponent<ParticleSystem>().GetComponent<Renderer>().material = materialPartc[moveInt % 2]; 
 
-        if (writeTextureForParticle) materialPartc[moveInt % 2].mainTexture = texturesPartc[moveInt % 2]; // Юнити отаказывается менять текстуру у материала в редакторе, в не зависимости от компьютера. Поиски в инете не помогли. Поэтому пришлось костылить и менять текстуру через код
+        if (writeTextureForParticle) materialPartc[moveInt % 2].mainTexture = texturesPartc[moveInt % 2]; // Р®РЅРёС‚Рё РѕС‚Р°РєР°Р·С‹РІР°РµС‚СЃСЏ РјРµРЅСЏС‚СЊ С‚РµРєСЃС‚СѓСЂСѓ Сѓ РјР°С‚РµСЂРёР°Р»Р° РІ СЂРµРґР°РєС‚РѕСЂРµ, РІ РЅРµ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РєРѕРјРїСЊСЋС‚РµСЂР°. РџРѕРёСЃРєРё РІ РёРЅРµС‚Рµ РЅРµ РїРѕРјРѕРіР»Рё. РџРѕСЌС‚РѕРјСѓ РїСЂРёС€Р»РѕСЃСЊ РєРѕСЃС‚С‹Р»РёС‚СЊ Рё РјРµРЅСЏС‚СЊ С‚РµРєСЃС‚СѓСЂСѓ С‡РµСЂРµР· РєРѕРґ
         
         partc.GetComponent<ParticleSystem>().Play();
         Destroy(partc, lifetimePart);
@@ -201,23 +177,23 @@ public class TurnScript : MonoBehaviour
 
         else
         {
-            // Проверяем, есть ли чекпоинты для следующего хода (костыль!!!)
+            // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё С‡РµРєРїРѕРёРЅС‚С‹ РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ С…РѕРґР° (РєРѕСЃС‚С‹Р»СЊ!!!)
             gameObject.GetComponent<CheckpointManager>().CheckActiveButton(moveInt);
 
-            moveInt++; // Переходим на следующий ход
+            moveInt++; // РџРµСЂРµС…РѕРґРёРј РЅР° СЃР»РµРґСѓСЋС‰РёР№ С…РѕРґ
             moveIntText.text = moveInt.ToString();
 
-            // Удаляем и создаем новую фигуру под курсором
+            // РЈРґР°Р»СЏРµРј Рё СЃРѕР·РґР°РµРј РЅРѕРІСѓСЋ С„РёРіСѓСЂСѓ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј
             Destroy(figureNow);
             UpdateFigureNow();
         }
     }
 
-    private void UpdateFigureNow() // Обновление фигуры под курсором, при смене хода игрока
+    private void UpdateFigureNow() // РћР±РЅРѕРІР»РµРЅРёРµ С„РёРіСѓСЂС‹ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј, РїСЂРё СЃРјРµРЅРµ С…РѕРґР° РёРіСЂРѕРєР°
     {
-        figureNow = Instantiate(prefabs[moveInt % prefabs.Length], figureNow.transform.position, Quaternion.identity) as GameObject; // Создаем фигуру
+        figureNow = Instantiate(prefabs[moveInt % prefabs.Length], figureNow.transform.position, Quaternion.identity) as GameObject; // РЎРѕР·РґР°РµРј С„РёРіСѓСЂСѓ
 
-        // Меняем цвет на полупрозрачный
+        // РњРµРЅСЏРµРј С†РІРµС‚ РЅР° РїРѕР»СѓРїСЂРѕР·СЂР°С‡РЅС‹Р№
         Color nowColor = figureNow.GetComponent<SpriteRenderer>().color;
         figureNow.GetComponent<SpriteRenderer>().color = new Color(nowColor.r, nowColor.g, nowColor.b, alphaColorNow);
     }
@@ -268,7 +244,7 @@ public class TurnScript : MonoBehaviour
         }
         isPlayerTurn = !AIfirstMove;
 
-        // При загрузке проекта сразу умножаем оффсеты на cellMultiplicity, чтобы дальне не было недопониманий
+        // РџСЂРё Р·Р°РіСЂСѓР·РєРµ РїСЂРѕРµРєС‚Р° СЃСЂР°Р·Сѓ СѓРјРЅРѕР¶Р°РµРј РѕС„С„СЃРµС‚С‹ РЅР° cellMultiplicity, С‡С‚РѕР±С‹ РґР°Р»СЊРЅРµ РЅРµ Р±С‹Р»Рѕ РЅРµРґРѕРїРѕРЅРёРјР°РЅРёР№
         for (int i = 0; i < offsets.Count; i++)
         {
             offsets[i] = new Vector2(offsets[i].x * cellMultiplicity, offsets[i].y * cellMultiplicity);
@@ -285,17 +261,17 @@ public class TurnScript : MonoBehaviour
 
     private void Update()
     {
-        // Переводим позицию мыши с экрана на игровое поле
+        // РџРµСЂРµРІРѕРґРёРј РїРѕР·РёС†РёСЋ РјС‹С€Рё СЃ СЌРєСЂР°РЅР° РЅР° РёРіСЂРѕРІРѕРµ РїРѕР»Рµ
         var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Ходит игрок
+        // РҐРѕРґРёС‚ РёРіСЂРѕРє
         if (isPlayerTurn)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 Vector2 figurePos = new Vector2(Mathf.Round(mousePos.x / cellMultiplicity) * cellMultiplicity, Mathf.Round(mousePos.y / cellMultiplicity) * cellMultiplicity);
 
-                // Условия для установки фигуры
+                // РЈСЃР»РѕРІРёСЏ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё С„РёРіСѓСЂС‹
                 if (!CheckSame(setCross, figurePos) && !CheckSame(setZero, figurePos) && !IsMouseOnUI() && !isWin)
                 {
                     if (moveInt % 2 == 0)
@@ -320,7 +296,7 @@ public class TurnScript : MonoBehaviour
             isPlayerTurn = !isPlayerTurn;
         }
 
-        // Обновляем позицию фигуры под курсором https://www.cyberforum.ru/csharp-beginners/thread1449949.html
+        // РћР±РЅРѕРІР»СЏРµРј РїРѕР·РёС†РёСЋ С„РёРіСѓСЂС‹ РїРѕРґ РєСѓСЂСЃРѕСЂРѕРј https://www.cyberforum.ru/csharp-beginners/thread1449949.html
         var pos = new Vector2(Mathf.Round(mousePos.x / cellMultiplicity) * cellMultiplicity, Mathf.Round(mousePos.y / cellMultiplicity) * cellMultiplicity);
         figureNow.transform.position = Vector2.Lerp(figureNow.transform.position, pos, speed * Time.deltaTime);
     }

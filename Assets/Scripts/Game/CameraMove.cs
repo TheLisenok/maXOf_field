@@ -23,7 +23,7 @@ public class CameraMove : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1)) // прав кнопка мыши
+        if (Input.GetMouseButtonDown(1)) // РїСЂР°РІ РєРЅРѕРїРєР° РјС‹С€Рё
         {
             touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
