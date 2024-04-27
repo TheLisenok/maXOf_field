@@ -7,126 +7,128 @@ using UnityEngine.UI;
 public class ButtonManager : MonoBehaviour
 {
     #region Constans
-    [SerializeField] private GameObject exitButton;
-    [SerializeField] private Canvas pauseCanvas = null;
-    [SerializeField] private GameObject toggleIsfirstAI;
-    [SerializeField] private Animator playTransition;
-    [SerializeField] private Animator exitTransition;
-    [SerializeField] private float waitTime = 1f;
+    [SerializeField] private GameObject exitButton; // Кнопка выхода (для её отключения при использовании WebGL)
+    [SerializeField] private Canvas pauseCanvas; // Меню паузы
+    [SerializeField] private GameObject toggleIsFirstAI; // Галочка того, что первый ход совершает ИИ
+    [SerializeField] private Animator defaultTransition; // Обычная анимация перехода между сценами 
+    [SerializeField] private Animator exitTransition; // У выхода анимация своя
+    [SerializeField] private float waitTime = 1f; // Время анимации
     #endregion
 
 
     #region public void
-    public void PlayPlayer()
+    public void PlayPlayer() // Кнопка начала игры. Игрок против Игрока
     {
-        PlayerPrefs.SetInt("isAIGame", 0);
-        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        PlayerPrefs.SetInt("isAIGame", 0); // Сохраняем переменную isAIGame в реестре
+        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1)); // Переходим на следующую сцену
     }
-    public void PlayAI()
+    public void PlayAI() // Кнопка начала игры. Игрок против ИИ
     {
         PlayerPrefs.SetInt("isAIGame", 1);
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
-    public void IsFirstMoveAI()
+    public void IsFirstMoveAI() // Галочка того, что первым ходит ии
     {
-        if (toggleIsfirstAI != null)
+        if (toggleIsFirstAI != null) // Если галочка задана
         {
-            if (toggleIsfirstAI.GetComponent<Toggle>().isOn == true)
+            if (toggleIsFirstAI.GetComponent<Toggle>().isOn == true) // Первым ходит ИИ
             {
-                PlayerPrefs.SetInt("IsFirstMoveAI", 1);
+                PlayerPrefs.SetInt("IsFirstMoveAI", 1); // Сохраняем в реестр
             }
-            else
+            else // Первым ходит Игрок
             {
                 PlayerPrefs.SetInt("IsFirstMoveAI", 0);
             }
         }
-
-        Debug.Log("IsFirstMoveAI: " + PlayerPrefs.GetInt("IsFirstMoveAI"));
     }
 
-    public void Exit()
+    public void Exit() // Кнопка выхода
     {
+        // Запускаем соопроцес выхода
         StartCoroutine(ExitWithAnimation());
     }
 
-    public void Pause()
+    public void MainMenu() // Кнопка возврата в главное меню
     {
-        pauseCanvas.enabled = !pauseCanvas.enabled;
-    }
-
-    public void MainMenu()
-    {
+        // Загружаем прошлую сцену 
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex - 1));
     }
-    public void Restart()
+    public void Restart() // Кнопка рестарта
     {
+        // Загружаем загруженную сцену заново
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex));
+    }
+    public void Pause() // Кнопка пауза/продолжить
+    {
+        // Переключаем канвас
+        pauseCanvas.enabled = !pauseCanvas.enabled;
     }
     #endregion
 
 
     #region MonoBehaviour callback
-    private void Awake()
+    private void Awake() // При загрузке
     {
-        if (pauseCanvas != null)
+        if (pauseCanvas != null) // Если есть канвас паузы
         {
-            pauseCanvas.enabled = false;
+            pauseCanvas.enabled = false; // Отключаем его
         }
 
-        if (exitButton != null && Application.platform == RuntimePlatform.WebGLPlayer)
+        if (exitButton != null && Application.platform == RuntimePlatform.WebGLPlayer) // Если есть кнопка выхода И игра запущена в БРАУЗЕРЕ
         {
-            exitButton.SetActive(false);
+            exitButton.SetActive(false); // Отключаем кнопку
         }
 
-        if (!PlayerPrefs.HasKey("IsFirstMoveAI"))
+        if (!PlayerPrefs.HasKey("IsFirstMoveAI")) // Если в реестре нет значения, что первым ли ходит ИИ
         {
-            PlayerPrefs.SetInt("IsFirstMoveAI", 0);
+            PlayerPrefs.SetInt("IsFirstMoveAI", 0); // Устанавливаем на false, потому что на сцене по умолчанию она тоже отключена
         }
 
-        if (toggleIsfirstAI != null)
+        if (toggleIsFirstAI != null) // Если галочка есть
         {
-            if (PlayerPrefs.GetInt("IsFirstMoveAI") == 0)
+            // То задаём ей такое значение, какое есть в реестре
+            if (PlayerPrefs.GetInt("IsFirstMoveAI") == 0) 
             {
-                toggleIsfirstAI.GetComponent<Toggle>().isOn = false;
+                toggleIsFirstAI.GetComponent<Toggle>().isOn = false;
             }
             else
             {
-                toggleIsfirstAI.GetComponent<Toggle>().isOn = true;
+                toggleIsFirstAI.GetComponent<Toggle>().isOn = true;
             }
         }
     }
 
-    private void Update()
+    private void Update() // Нажатия кнопок на клавиатуре
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)) // Эскейп
         {
             Pause();
         }
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R)) // Английская R
         {
             Restart();
         }
     }
     #endregion
 
-
+    // Процессы, запущенные параллельно основного скрипта
     #region IEnumerator
-    IEnumerator LoadLevel(int levelIndex)
+    IEnumerator LoadLevel(int levelIndex) // Загрузка сцены по её индексу
     {
-        playTransition.SetTrigger("Start"); // Запускаем анимацию через триггер
+        defaultTransition.SetTrigger("Start"); // Запускаем анимацию через триггер
 
         yield return new WaitForSeconds(waitTime); // Ждём когда анимация закончится
 
         SceneManager.LoadScene(levelIndex); // Загружаем уровень
     }
-    IEnumerator ExitWithAnimation()
+    IEnumerator ExitWithAnimation() // Выход из игры
     {
-        exitTransition.SetTrigger("Start");
+        exitTransition.SetTrigger("Start"); // Ставим триггер анимации
 
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(waitTime); // Ждём 
 
-        Application.Quit();
+        Application.Quit(); // Закрываем игру
 
         
     }

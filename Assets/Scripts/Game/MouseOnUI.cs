@@ -5,20 +5,17 @@ using UnityEngine.EventSystems;
 
 public class MouseOnUI : MonoBehaviour
 {
+    // Переменная для проверки объекта на курсоре
     private bool onUI;
 
     private void OnMouseEnter()
     {
+        // Курсор на интерфейсе
         onUI = true;
-        Debug.Log(onUI);
     }
     private void OnMouseLeave() 
     {  
+        // Курсор вышел с интерфейса
         onUI = false;
-        Debug.Log(onUI);
-    }
-    private void Update()
-    {
-        //Debug.Log(EventSystem.current.currentSelectedGameObject);
     }
 }

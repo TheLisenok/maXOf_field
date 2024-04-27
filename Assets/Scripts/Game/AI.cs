@@ -7,11 +7,12 @@ using UnityEngine.UIElements;
 public class AI : MonoBehaviour
 {
     #region Constans
-    [SerializeField] private bool IsDebug = false;
-    [SerializeField] private GameObject checkBox;
+    [Header("Debug")]
+    [SerializeField] private bool IsDebug = false; // Отображает данные для дебага в консоли
+    [SerializeField] private GameObject checkBox; // Ставится в клетку, если её проверяет ИИ
     
-    private int cellMultiplicity;
-    private List<Vector2> offsets = new List<Vector2> // Список оффсетов для проверки победы (Без умножения на cellMultiplicity)
+    private int cellMultiplicity; // Масштаб клетки
+    private List<Vector2> offsets = new List<Vector2> // Список офсетов для проверки (Без умножения на cellMultiplicity)
     {
         new Vector2(0, 1),
         new Vector2(0, -1),
@@ -25,106 +26,98 @@ public class AI : MonoBehaviour
     #endregion
 
     #region Functions
-    bool CheckWin(List<Vector2> setFigures, Vector2 figurePos)
+    bool CheckWin(List<Vector2> setFigures, Vector2 figurePos) // Проверка победы наследуется из TurnScript
     {
         return gameObject.GetComponent<TurnScript>().CheckWin(setFigures, figurePos);
     }
 
-    bool CheckSame(List<Vector2> vectors, Vector2 nowVector)
+    int CountLine(List<Vector2> figures, Vector2 nowPos) // Считает макс длину линии из позиции (Переделанная CheckWin из TurnScript)
     {
-        return gameObject.GetComponent<TurnScript>().CheckSame(vectors, nowVector);
-    }
+        int maxCount = 0; // Макс длинна
 
-    int CountLine(List<Vector2> figures, Vector2 nowPos) // Переделанная CheckWin из TurnScript
-    {
-        int maxCount = 0;
-
-        for (int o = 0; o < offsets.Count; o++) // Проходимся по всем оффсетам
+        for (int o = 0; o < offsets.Count; o++) // Проходимся по всем офсетам
         {
             int count = 0;
-            //var offset = new Vector2(offsets[o].x * cellMultiplicity, offsets[o].y * cellMultiplicity);
 
-            while (CheckSame(figures, nowPos - offsets[o])) // Переходим в край обратный оффсету
+            while (figures.Contains(nowPos - offsets[o])) // Переходим в край обратный офсету
             {
                 nowPos -= offsets[o];
             }
 
-            while (CheckSame(figures, nowPos + offsets[o])) // Считаем кол-во фигур в ряде начиная с крайнего
+            while (figures.Contains(nowPos + offsets[o])) // Считаем кол-во фигур в ряде начиная с крайнего
             {
-                count++;
+                count++; // Считаем длину
                 nowPos += offsets[o];
             }
 
+            // Находим максимальную
             if (count > maxCount) maxCount = count;
         }
 
-        //Debug.Log(maxCount);
+        // Возвращаем максимальную длину
         return maxCount;
     }
 
-    List<Vector2> FindEdge(List<Vector2> figuresWhoCheck, Vector2 nowPos, List<Vector2> figuresOtherPlayer) // figuresOtherPlayer Нужен для того, чтобы случайно не поставить фигуру в уже поставленное место
+    
+    List<Vector2> FindEdge(List<Vector2> figuresWhoCheck, Vector2 nowPos, List<Vector2> figuresOtherPlayer) // Находит край на линии фигур (figuresOtherPlayer Нужен для того, чтобы случайно не поставить фигуру в уже поставленное место)
     {
         List<Vector2> edges = new List<Vector2>();
-        int maxCount = 0; // Если вдруг будет выбор из линии из трёх и линии из четырех, то будем выбирать максимальную по длинне, и уже ей препятствовать
+        int maxCount = 0; // Если вдруг будет выбор из линии из трёх и линии из четырех, то будем выбирать максимальную по длине, и уже ей препятствовать
 
         for (int o = 0; o < offsets.Count; o++)
         {
             int count = 0;
-            //var offset = new Vector2(offsets[o].x * cellMultiplicity, offsets[o].y * cellMultiplicity);
-            Vector2 startPos = new Vector2();
+            Vector2 startPos;
 
-            while (CheckSame(figuresWhoCheck, nowPos + offsets[o])) // Переходим в край обратный оффсету
+            while (figuresWhoCheck.Contains(nowPos + offsets[o])) // Переходим в край обратный офсету
             {
                 nowPos += offsets[o];
             }
             startPos = nowPos;
 
-            while (CheckSame(figuresWhoCheck, nowPos - offsets[o])) // Считаем кол-во фигур в ряде начиная с крайнего
+            while (figuresWhoCheck.Contains(nowPos - offsets[o])) // Считаем кол-во фигур в ряде начиная с крайнего
             {
                 count++;
                 nowPos -= offsets[o];
             }
 
-            if (count > maxCount)
+            if (count > maxCount) // Нынешняя длинна больше прошлого максимальной
             {
-                edges.Clear(); // Обнуляем список, так как появился претендент получше
-                maxCount = count;
+                edges.Clear(); // Обнуляем список ходов, так как появился претендент получше
+                maxCount = count; 
 
                 // Находим один из краев, куда можно поставить фигуру, и если ее уже нет в списках, то заносим
-                var startEdge = startPos + offsets[o];
-                if (!CheckSame(figuresWhoCheck, startEdge) && !CheckSame(figuresOtherPlayer, startEdge))
+                var startEdge = startPos + offsets[o]; // От стартовой + отступ
+                if (!figuresWhoCheck.Contains(startEdge) && !figuresOtherPlayer.Contains(startEdge)) // Если её нет в списках
                 {
-                    edges.Add(startEdge);
+                    edges.Add(startEdge); // то заносим
                 }
 
-                var endEdge = nowPos - offsets[o];
-                if (!CheckSame(figuresWhoCheck, endEdge) && !CheckSame(figuresOtherPlayer, endEdge))
+                var endEdge = nowPos - offsets[o]; // От конечной - отступ
+                if (!figuresWhoCheck.Contains(endEdge) && !figuresOtherPlayer.Contains(endEdge)) // Если её нет в списках
                 {
-                    edges.Add(endEdge);
+                    edges.Add(endEdge); // то заносим
                 }
             }
-
-
         }
         return edges;
     }
     #endregion
 
     #region Monobehaviour CallBack
-    private void Awake()
+    private void Awake() // Загрузка сцены
     {
-        cellMultiplicity = gameObject.GetComponent<TurnScript>().cellMultiplicity;
+        cellMultiplicity = gameObject.GetComponent<TurnScript>().cellMultiplicity; // Узнаём масштаб клетки
 
-        // При загрузке проекта сразу умножаем оффсеты на cellMultiplicity, чтобы дальне не было недопониманий
+        // При загрузке проекта сразу умножаем офсеты на cellMultiplicity, чтобы дальне не было недопониманий
         for (int i = 0; i < offsets.Count; i++)
         {
             offsets[i] = new Vector2(offsets[i].x * cellMultiplicity, offsets[i].y * cellMultiplicity);
-            //Debug.Log(offsets[i]);
         }
     }
     #endregion
 
-    public Vector2 AIMove(List<Vector2> playerSet, List<Vector2> AIset)
+    public Vector2 AIMove(List<Vector2> playerSet, List<Vector2> AIset) // ОСНОВНАЯ функция с алгоритмом нахождения лучшего хода
     {
         int maxScore = int.MinValue; // У лучшей клетки для хода будет макс кол-во очков
         Vector2 bestMove = new Vector2(); // Возвращаем лучший ход
@@ -136,7 +129,7 @@ public class AI : MonoBehaviour
             // Ставим первую фигуру в радиусе 10 клеток от начала координат
             var firstMove = new Vector2(Mathf.Round(Random.Range(-10, 10) / cellMultiplicity) * cellMultiplicity, Mathf.Round(Random.Range(-10, 10) / cellMultiplicity) * cellMultiplicity);
 
-            while (CheckSame(playerSet, firstMove)) // Защита от постановки фигуры ии на фигуру игрока
+            while (playerSet.Contains(firstMove)) // Защита от постановки фигуры ии на фигуру игрока
             {
                 firstMove = new Vector2(Mathf.Round(Random.Range(-10, 10) / cellMultiplicity) * cellMultiplicity, Mathf.Round(Random.Range(-10, 10) / cellMultiplicity) * cellMultiplicity);
             }
@@ -149,16 +142,16 @@ public class AI : MonoBehaviour
         #region AI move for Yourself (low priority)
         for (int i = 0; i < AIset.Count; i++) // Пробираемся по всем ходам ии
         {
-            for (int o = 0; o < offsets.Count; o++) // Пробираемся по оффсетам у каждой клетки
+            for (int o = 0; o < offsets.Count; o++) // Пробираемся по офсетам у каждой клетки
             {
                 int score = 0; // Очки в данный момент
                 var tmpPos = AIset[i] + offsets[o]; // Отступаем от клетки на один
-                List<Vector2> tmpAIset = new List<Vector2>(AIset); // ИМЕННО НОВЫЙ список, НЕ связанный с оригинальным
-                
+                List<Vector2> tmpAIset = new List<Vector2>(AIset); // ИМЕННО НОВЫЙ список, НЕ связанный с оригинальным, чтобы при каком-то изменении случайно не задеть основной список           
 
-                if (!CheckSame(AIset, tmpPos) && !CheckSame(playerSet, tmpPos))
+                // Если отступа нет в списках
+                if (!AIset.Contains(tmpPos) && !playerSet.Contains(tmpPos))
                 {
-                    tmpAIset.Add(tmpPos);
+                    tmpAIset.Add(tmpPos); // Временно добавляем 
 
                     //Дебаг
                     if (IsDebug)
@@ -173,7 +166,7 @@ public class AI : MonoBehaviour
                     }
                     else // Победы нет
                     {
-                        // Система примерно такая: Чем длиннее линия, тем нужно быстрее её продолжить
+                        // Система аля Минимакс такая: ИИ строит пытается строить линию длиннее, как только сможет, пока игрок не начал побеждать
                         score = CountLine(AIset, tmpPos);
 
                         if (score > maxScore)
@@ -185,8 +178,6 @@ public class AI : MonoBehaviour
                 }
             }
         }
-
-
         #endregion
 
         // ИИ мешает игроку; Высокий приоритет, чтобы игрок не выиграл
@@ -195,21 +186,22 @@ public class AI : MonoBehaviour
         // Перебираем клетки Игрока
         for (int i = 0; i < playerSet.Count; i++)
         {
-            var tmpMove = playerSet[i];
+            var tmpMove = playerSet[i]; // Выбираем позицию
 
             for (int o = 0; o < offsets.Count; o++) 
             {
-                var tmpOff = tmpMove + offsets[o];
+                var tmpOff = tmpMove + offsets[o]; // Отступаем от позиции
                 
-                if (!CheckSame(AIset, tmpOff) && !CheckSame(playerSet, tmpOff))
+                // Если координаты нет в списках
+                if (!AIset.Contains(tmpOff) && !playerSet.Contains(tmpOff))
                 {
+                    // Заносим фигуру во временный список
                     var tmpPlayerSet = new List<Vector2>(playerSet);
                     tmpPlayerSet.Add(tmpOff);
 
-                    //Debug.Log("playerSet[i]: " + playerSet[i] + " | tmpOff: " + tmpOff + " => " + CheckWin(tmpPlayerSet, tmpOff));
                     if (CheckWin(tmpPlayerSet, tmpOff)) // Если игрок может следующим ходом победить
                     {
-                        return tmpOff;
+                        return tmpOff; // Препятствуем ему, совершая ход в эту клетку 
                     }
                 }
             }
@@ -220,7 +212,6 @@ public class AI : MonoBehaviour
 
                 if (edges.Count > 0)
                 {
-                    //Debug.Log(edges.Count);
                     return edges[Random.Range(0, edges.Count)]; // Возвращаем рандомную из них  
                 }
             }
@@ -228,6 +219,7 @@ public class AI : MonoBehaviour
             #endregion
            
         }
+        // Если return выше не сработали, то возвращаем лучший ход
         return bestMove;
     }
 }

@@ -16660,8 +16660,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exitButton: {fileID: 943358400}
   pauseCanvas: {fileID: 0}
-  toggleIsfirstAI: {fileID: 1147939980}
-  playTransition: {fileID: 458182224}
+  toggleIsFirstAI: {fileID: 1147939980}
+  defaultTransition: {fileID: 458182224}
   exitTransition: {fileID: 448435252}
   waitTime: 1
 --- !u!4 &1091373008

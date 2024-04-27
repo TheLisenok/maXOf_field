@@ -739,8 +739,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   exitButton: {fileID: 0}
   pauseCanvas: {fileID: 686843964}
-  toggleIsfirstAI: {fileID: 0}
-  playTransition: {fileID: 1176433876}
+  toggleIsFirstAI: {fileID: 0}
+  defaultTransition: {fileID: 1176433876}
   exitTransition: {fileID: 1176433875}
   waitTime: 1
 --- !u!4 &79711633
@@ -9388,7 +9388,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1983fc3cde7c8eb448123fe3036cd659, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.7
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
