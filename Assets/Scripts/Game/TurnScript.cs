@@ -16,7 +16,7 @@ public class TurnScript : MonoBehaviour
     [Header("Animations")]
     public Animator winAnim; // Анимация интерфейса при победе
 
-    [Header("Data for AI")]
+    [Header("Data for AI and Game")]
     public List<Vector2> setCross = new List<Vector2>(); // Список с уже поставленными крестами
     public List<Vector2> setZero = new List<Vector2>(); // Список с уже поставленными кругами
     [SerializeField] private AI aiScript; // Скрипт ИИ
