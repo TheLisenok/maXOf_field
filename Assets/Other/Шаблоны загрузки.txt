@@ -1,5 +1,0 @@
-1) Винда
-butler push "C:\Users\sokol\Tic_tac_toe\Builds\0.9_win" thelisenok/maxof-field:win --userversion 0.9
-
-2) html
-butler push "C:\Users\sokol\Tic_tac_toe\Builds\0.9_html" thelisenok/maxof-field:web --userversion 0.9
