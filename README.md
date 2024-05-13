@@ -8,6 +8,8 @@ https://thelisenok.itch.io/maxof-field
 
 https://gamejolt.com/games/maxof-field/894093
 
+https://yandex.ru/games/app/337600
+
 The scripts are located along the path : *Assets/Scripts*
 
 Files with the extension *.meta* is needed for Unity to work correctly
@@ -21,6 +23,8 @@ Files with the extension *.meta* is needed for Unity to work correctly
 https://thelisenok.itch.io/maxof-field
 
 https://gamejolt.com/games/maxof-field/894093
+
+
 
 Скрипты находятся по пути : *Assets/Scripts*
 
