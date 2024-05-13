@@ -24,7 +24,7 @@ https://thelisenok.itch.io/maxof-field
 
 https://gamejolt.com/games/maxof-field/894093
 
-
+https://yandex.ru/games/app/337600
 
 Скрипты находятся по пути : *Assets/Scripts*
 
