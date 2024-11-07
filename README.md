@@ -1,6 +1,6 @@
 ### Description
 
-##### This is the source code and resources of the maXOF field game - tic tac toe on an endless field. The game was developed on Unity for coursework.
+#### This is the source code and resources of the maXOF field game - tic tac toe on an endless field. The game was developed on Unity for coursework.
 
 **The game pages:**
 
