@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: New Table_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: eef449eee6155cc42989fcdbf2e30a30, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 24661803008
+    m_Localized: maXOf field
+    m_Metadata:
+      m_Items: []
+  - m_Id: 127355142144
+    m_Localized: 'Management:
+
+      LMB - put a figure
+
+      RMB - move the camera
+
+      MMB
+      - set a checkpoint
+
+      Z/X - switching between checkpoints forward/backward
+
+      Scroll
+      - change the scale
+
+      R - quick restart'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 371732070400
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 431983247360
+    m_Localized: Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 460751978496
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 629572714496
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 673868759040
+    m_Localized: Main menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 723252494336
+    m_Localized: '1x1
+
+      Human vs Human'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 816101801984
+    m_Localized: '1x1
+
+      Human vs AI'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 874331324416
+    m_Localized: In development
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2868957757440
+    m_Localized: Select a game mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1012382646272
+    m_Localized: Zero win!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1045953855488
+    m_Localized: Cross win!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 948130103296
+    m_Localized: Nobody win, for now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19989614142017536
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087447944974336
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087547597443072
+    m_Localized: Minimize
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087793849225216
+    m_Localized: Won Crosses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27087800593666048
+    m_Localized: Won Noughts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27089227093233664
+    m_Localized: Show victory window
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27939590096670720
+    m_Localized: The AI makes the first move
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
