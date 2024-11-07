@@ -19,7 +19,7 @@ public class TurnScript : MonoBehaviour
     [Header("Data for AI")]
     public List<Vector2> setCross = new List<Vector2>(); // Список с уже поставленными крестами
     public List<Vector2> setZero = new List<Vector2>(); // Список с уже поставленными кругами
-    private AI aiScript; // Скрипт ИИ
+    [SerializeField] private AI aiScript; // Скрипт ИИ
     //private bool isAImove; // Совершает ли ИИ ход в данный момент
 
     [Header("Figures")]
@@ -231,8 +231,6 @@ public class TurnScript : MonoBehaviour
     #region Monobehaviour Callback
     private void Awake() // При загрузке
     {
-        aiScript = AI.Instance; // Назначаем скрипт ии через Singletone
-        
         // Узнаём из системы сохранений какой тип игры будет
         isAIGame = intToBool(PlayerPrefs.GetInt("isAIGame")); 
         if (isAIGame)

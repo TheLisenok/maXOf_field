@@ -6,10 +6,6 @@ using UnityEngine.UIElements;
 
 public class AI : MonoBehaviour
 {
-    #region Singletone
-    public static AI Instance { get; private set; }
-    #endregion
-
     #region Constans
     [Header("Debug")]
     [SerializeField] private bool IsDebug = false; // Отображает данные для дебага в консоли
@@ -111,8 +107,6 @@ public class AI : MonoBehaviour
     #region Monobehaviour CallBack
     private void Awake() // Загрузка сцены
     {
-        Instance = this;
-        
         cellMultiplicity = gameObject.GetComponent<TurnScript>().cellMultiplicity; // Узнаём масштаб клетки
 
         // При загрузке проекта сразу умножаем офсеты на cellMultiplicity, чтобы дальне не было недопониманий
