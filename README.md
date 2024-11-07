@@ -5,6 +5,7 @@
 **The game pages:**
 
 https://thelisenok.itch.io/maxof-field
+
 https://gamejolt.com/games/maxof-field/894093
 
 The scripts are located along the path : *Assets/Scripts*
@@ -18,6 +19,7 @@ Files with the extension *.meta* is needed for Unity to work correctly
 **Страницы игры:**
 
 https://thelisenok.itch.io/maxof-field
+
 https://gamejolt.com/games/maxof-field/894093
 
 Скрипты находятся по пути : *Assets/Scripts*
