@@ -1,6 +1,6 @@
-***En***
+### Description
 
-#### This is the source code and resources of the maXOF field game - tic tac toe on an endless field. The game was developed on Unity for coursework.
+##### This is the source code and resources of the maXOF field game - tic tac toe on an endless field. The game was developed on Unity for coursework.
 
 **The game pages:**
 
@@ -12,7 +12,7 @@ The scripts are located along the path : *Assets/Scripts*
 
 Files with the extension *.meta* is needed for Unity to work correctly
 
-***Ру***
+### Описание
 
 #### Это исходный код и ресурсы игры maXOF field - крестики нолики на бесконечном поле. Игра была разработана на Unity для курсовой работы.
 
