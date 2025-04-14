@@ -203,11 +203,11 @@ public class TurnScript : MonoBehaviour
         // Запрашиваем у класса AI лучший ход и совершаем обычных ход с ним
         if (moveInt % 2 == 1)
         {
-            Move(aiScript.AIMove(setCross, setZero), setZero);
+            Move(AI.Instance.AIMove(setCross, setZero), setZero);
         }
         else
         {
-            Move(aiScript.AIMove(setZero, setCross), setCross);
+            Move(AI.Instance.AIMove(setZero, setCross), setCross);
         }
     }
 
