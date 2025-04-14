@@ -113,7 +113,7 @@ public class AI : MonoBehaviour
     {
         Instance = this;
         
-        cellMultiplicity = gameObject.GetComponent<TurnScript>().cellMultiplicity; // Узнаём масштаб клетки
+        cellMultiplicity = gameObject.GetComponent<TurnScript>().CELL_MULTIPLICITY; // Узнаём масштаб клетки
 
         // При загрузке проекта сразу умножаем офсеты на cellMultiplicity, чтобы дальне не было недопониманий
         for (int i = 0; i < offsets.Count; i++)

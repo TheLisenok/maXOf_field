@@ -106,7 +106,7 @@ public class CheckpointManager : MonoBehaviour
             buttons[i].GetComponent<Button>().interactable = false;
         }
 
-        cellMultiplicity = turnScript.cellMultiplicity;
+        cellMultiplicity = turnScript.CELL_MULTIPLICITY;
     }
 
     void Update()

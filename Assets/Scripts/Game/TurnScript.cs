@@ -7,6 +7,12 @@ using Unity.VisualScripting;
 
 public class TurnScript : MonoBehaviour
 {
+    #region Singletone
+    public static TurnScript Instance { get; private set; }
+
+
+    #endregion
+
     #region Constans
     [Header("Output text")] // Тексты выводящиеся на сцену
     public GameObject CrossTextWin;
@@ -22,23 +28,22 @@ public class TurnScript : MonoBehaviour
     private AI aiScript; // Скрипт ИИ
     //private bool isAImove; // Совершает ли ИИ ход в данный момент
 
-    [Header("Figures")]
-    [SerializeField] private GameObject[] prefabs; // Префабы с фигурами
+
+    //[Header("Figures")]
+    [SerializeField] public GameObject[] prefabs; // Префабы с фигурами
     [SerializeField] private Transform ObjectToSet; // Родительский объект, в который входят поставленный фигуры
     [SerializeField] private GameObject prefWinLine; // Линия, зачёркивающая победный ряд
 
-    [Header("Figure under cursor")]
-    [SerializeField][Range(0, 1)] private float alphaColorNow = 0.2f; // Прозрачность фигуры под курсором
-    [SerializeField][Range(0, 20f)] private float speed = 0.1f; // Скорость передвижения этой фигуры
+    
 
     [Header("Field settings")]
-    [SerializeField] public int cellMultiplicity = 2; // Масштаб клетки
+    public int CELL_MULTIPLICITY = 2; // Масштаб клетки
     // Объяснение, почему cellMultiplicity != 1: Юнити плохо работает как с числами с плавающей точкой, так и с большими. Поэтому размер 2 - это компромис, между плавностью работы камеры, движения фигуры и "бесконечностью поля"
 
     [Header("Game rules")]
     public int moveInt = 0; // Номер хода
     [SerializeField] private int countToWin = 5; // Количество фигур в ряде для победы
-    private bool isAIGame; // Нужен ли вторым игроком ИИ
+    public bool isAIGame; // Нужен ли вторым игроком ИИ
     private bool AIfirstMove; // Делает ли ИИ первый ход (при игре с ИИ естественно)
 
     [Header("Particle for set figures")]
@@ -56,9 +61,8 @@ public class TurnScript : MonoBehaviour
     [SerializeField] private bool writeTextureForParticle = false; // Нужно ли записывать текстуру для материала. По какой-то причине возможность менять текстуру через Editor стана невозможной, лазанье в настройках и в интернете не помогло
 
 
-    private bool isPlayerTurn; // Ходит ли игрок
-    private bool isWin = false; // Проверка победы
-    private GameObject figureNow; // Фигура, которая сейчас отображается под курсором
+    public bool IsPlayerTurn; // Ходит ли игрок
+    public bool IsWin = false; // Проверка победы
     private Vector2 startPosWL; // Стартовая            позиции       победы
     private Vector2 endPosWL;   //           и конечная         линии
 
@@ -76,6 +80,16 @@ public class TurnScript : MonoBehaviour
     #endregion
 
     #region Voids
+    /// <summary>
+    /// Возвращает GameObject нынешней фигуры
+    /// </summary>
+    /// <param name="addValueToIndex">Дополнительное значение к индексу, чтобы получить фигуру, которая будет на следующих ходах</param>
+    /// <returns>Игровой объект нынешней фигуры</returns>
+    public GameObject GetPrefabCurrentFigure(int addValueToIndex = 0)
+    {
+        return prefabs[(addValueToIndex + moveInt) % prefabs.Length];
+    }
+
     public bool CheckWin(List<Vector2> setFigures, Vector2 figurePos)
     {
         // Перебираем все оффсеты
@@ -114,9 +128,8 @@ public class TurnScript : MonoBehaviour
     // Список действий при победе
     private void Win(int moveInt, Vector2 startPosWL, Vector2 endPosWL)
     {
-        isWin = true;
-        Destroy(figureNow); // Удаляем фигуру под курсором
-        figureNow = Instantiate(new GameObject()); // и заменяем её пустышкой
+        IsWin = true;
+        InputHandler.Instance.OffFigureUnderCursor();
 
 
         // Действия с победной линией
@@ -182,20 +195,7 @@ public class TurnScript : MonoBehaviour
 
             // Проверяем, есть ли чекпоинты для следующего хода (костыль!!!)
             gameObject.GetComponent<CheckpointManager>().CheckActiveButton(moveInt);
-
-            // Удаляем и создаем новую фигуру под курсором
-            Destroy(figureNow);
-            UpdateFigureNow();
         }
-    }
-
-    private void UpdateFigureNow() // Обновление фигуры под курсором, при смене хода игрока
-    {
-        figureNow = Instantiate(prefabs[moveInt % prefabs.Length], figureNow.transform.position, Quaternion.identity) as GameObject; // Создаем фигуру
-
-        // Меняем цвет на полупрозрачный
-        Color nowColor = figureNow.GetComponent<SpriteRenderer>().color;
-        figureNow.GetComponent<SpriteRenderer>().color = new Color(nowColor.r, nowColor.g, nowColor.b, alphaColorNow);
     }
 
     private void AiMove() // Ход ИИ
@@ -211,16 +211,6 @@ public class TurnScript : MonoBehaviour
         }
     }
 
-    private bool IsMouseOnUI() // Проверка мыши на интерфейсе
-    {
-        // Запрашиваем эту информацию у Системы Событий
-        if (EventSystem.current.currentSelectedGameObject != null)
-        {
-            return true;
-        }
-        else return false;
-    }
-
     private bool intToBool(int value) // Делаем из числа bool, нужно для системы сохранений
     {
         if (value == 1) return true;
@@ -229,10 +219,16 @@ public class TurnScript : MonoBehaviour
     #endregion
 
     #region Monobehaviour Callback
-    private void Awake() // При загрузке
+    private void Awake()
     {
-        aiScript = AI.Instance; // Назначаем скрипт ии через Singletone
-        
+        // Singletone
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         // Узнаём из системы сохранений какой тип игры будет
         isAIGame = intToBool(PlayerPrefs.GetInt("isAIGame")); 
         if (isAIGame)
@@ -243,68 +239,43 @@ public class TurnScript : MonoBehaviour
         {
             AIfirstMove = false;
         }
-        isPlayerTurn = !AIfirstMove;
+        IsPlayerTurn = !AIfirstMove;
 
         // При загрузке проекта сразу умножаем оффсеты на cellMultiplicity, чтобы дальне не было недопониманий
         for (int i = 0; i < offsets.Count; i++)
         {
-            offsets[i] = new Vector2(offsets[i].x * cellMultiplicity, offsets[i].y * cellMultiplicity);
+            offsets[i] = new Vector2(offsets[i].x * CELL_MULTIPLICITY, offsets[i].y * CELL_MULTIPLICITY);
         }
-
-        // Инициализируем фигуру под курсором и раскрашиваем её
-        figureNow = Instantiate(prefabs[moveInt % prefabs.Length]);
-        Color nowColor = figureNow.GetComponent<SpriteRenderer>().color;
-        figureNow.GetComponent<SpriteRenderer>().color = new Color(nowColor.r, nowColor.g, nowColor.b, alphaColorNow);
 
         moveIntText.text = moveInt.ToString();
     }
 
-    private void Update()
+
+    public void MakeMove(Vector2 figurePos)
     {
-        // Переводим позицию мыши с экрана на игровое поле
-        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Ходит игрок
-        if (isPlayerTurn)
+        // Условия для установки фигуры
+        if (!setCross.Contains(figurePos) && !setZero.Contains(figurePos) && !IsWin)
         {
-            if (Input.GetMouseButtonDown(0)) // Нажата ЛКМ
+            if (moveInt % 2 == 0) // Крестик
             {
-                // Округляем позицию
-                Vector2 figurePos = new Vector2(Mathf.Round(mousePos.x / cellMultiplicity) * cellMultiplicity, Mathf.Round(mousePos.y / cellMultiplicity) * cellMultiplicity);
-
-                // Условия для установки фигуры (фигура должна быть не в списках, курсор не на интерфейсе, победа не наступила)
-                if (!setCross.Contains(figurePos) && !setZero.Contains(figurePos) && !IsMouseOnUI() && !isWin) 
-                {
-                    // Ходит Крестик
-                    if (moveInt % 2 == 0)
-                    {
-                        Move(figurePos, setCross);
-
-                        // Если игра с ИИ, запрещаем игроку делать следующий ход
-                        if (isAIGame) isPlayerTurn = !isPlayerTurn;
-                    }
-                    // Ходит Нолик
-                    else if (moveInt % 2 == 1)
-                    {
-                        Move(figurePos, setZero);
-
-                        // Если игра с ИИ, запрещаем игроку делать следующий ход
-                        if (isAIGame) isPlayerTurn = !isPlayerTurn;
-                    }
-                }
+                Move(figurePos, setCross);
+                if (isAIGame) IsPlayerTurn = false;
+            }
+            else // Нолик
+            {
+                Move(figurePos, setZero);
+                if (isAIGame) IsPlayerTurn = false;
             }
         }
-        // Ходит ИИ
-        else if (!isWin && isAIGame)
+    }
+
+    public void HandleAITurn()
+    {
+        if (!IsWin && isAIGame && !IsPlayerTurn)
         {
             AiMove();
-
-            isPlayerTurn = !isPlayerTurn;
+            IsPlayerTurn = true;
         }
-
-        // Обновляем позицию фигуры под курсором https://www.cyberforum.ru/csharp-beginners/thread1449949.html (Ответ от kolorotur)
-        var pos = new Vector2(Mathf.Round(mousePos.x / cellMultiplicity) * cellMultiplicity, Mathf.Round(mousePos.y / cellMultiplicity) * cellMultiplicity);
-        figureNow.transform.position = Vector2.Lerp(figureNow.transform.position, pos, speed * Time.deltaTime);
     }
     #endregion
 }
