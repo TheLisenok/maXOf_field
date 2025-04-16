@@ -12,6 +12,8 @@ The scripts are located along the path : *Assets/Scripts*
 
 Files with the extension *.meta* is needed for Unity to work correctly
 
+---
+
 ### Описание
 
 #### Это исходный код и ресурсы игры maXOF field - крестики нолики на бесконечном поле. Игра была разработана на Unity для курсовой работы.
